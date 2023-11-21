@@ -440,14 +440,23 @@ document.querySelector('.search-input').addEventListener('keypress', function (e
 
 function performSearch() {
     const searchText = document.querySelector('.search-input').value.toLowerCase();
-    const movies = document.querySelectorAll('.movie');
+    const currentMovies = document.querySelectorAll('.movie');
+    const upcomingMovies = document.querySelectorAll('.upcoming-movie');
     let foundMovies = [];
 
-    movies.forEach(movie => {
+    // Search in current movies
+    currentMovies.forEach(movie => {
         const title = movie.querySelector('h4').textContent.toLowerCase();
-
         if (title.includes(searchText)) {
-            foundMovies.push({ title: title, id: movie.id });
+            foundMovies.push({element: movie.cloneNode(true), type: 'current'});
+        }
+    });
+
+    // Search in upcoming movies
+    upcomingMovies.forEach(movie => {
+        const title = movie.textContent.toLowerCase();
+        if (title.includes(searchText)) {
+            foundMovies.push({element: movie.cloneNode(true), type: 'upcoming'});
         }
     });
 
@@ -459,7 +468,7 @@ function displaySearchResults(foundMovies) {
     searchModalContainer.innerHTML = `
         <div class="full-screen-modal show">
             <span class="close-button">&times;</span>
-            <div class="search-modal-content"></div>
+            <div class="search-modal-content" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
         </div>`;
 
     const searchModalContent = searchModalContainer.querySelector('.search-modal-content');
@@ -467,12 +476,23 @@ function displaySearchResults(foundMovies) {
     if (foundMovies.length === 0) {
         searchModalContent.innerHTML = 'No search found';
     } else {
-        foundMovies.forEach(movie => {
-            const movieDiv = document.createElement('div');
-            movieDiv.className = 'search-movie-title';
-            movieDiv.textContent = movie.title;
-            movieDiv.onclick = () => openMovieModal(`#modal-${movie.id}`);
-            searchModalContent.appendChild(movieDiv);
+        foundMovies.forEach(({element, type}) => {
+            element.addEventListener('click', function() {
+                const movieId = type === 'current' ? element.id.replace('movie-', 'modal-movie-') : element.id.replace('upcoming-movie-', 'modal-upcoming-movie-');
+                openMovieModal(movieId);
+            });
+            // Set image size based on movie type
+            const img = element.querySelector('img');
+            if (img) {
+                if (type === 'current') {
+                    img.style.width = '112px';
+                    img.style.height = '169px';
+                } else if (type === 'upcoming') {
+                    img.style.width = '70px';
+                    img.style.height = '97px';
+                }
+            }
+            searchModalContent.appendChild(element);
         });
     }
 
@@ -482,11 +502,13 @@ function displaySearchResults(foundMovies) {
         searchModalContainer.innerHTML = '';
     };
 }
-
-function openMovieModal(movieId) {
-    document.querySelector(movieId).style.display = 'block';
-    document.getElementById('search-modal-container').innerHTML = '';
+function openMovieModal(movieModalId) {
+    const modal = document.getElementById(movieModalId);
+    if (modal) {
+        modal.style.display = 'block';
+    }
 }
+
 document.querySelectorAll('.buy-ticket-button').forEach(function(button) {
     button.addEventListener('click', function() {
         console.log('Buy Ticket button was clicked.');
