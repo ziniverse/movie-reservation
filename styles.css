@@ -64,7 +64,7 @@ h1 {
 }
 
 /* Style inputs and submit button */
-input[type=text], input[type=email] {
+#userForm input[type=text], input[type=email] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -274,7 +274,7 @@ h3{
 .modal {
     display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1; /* Sit on top of the page */
+    z-index: 1000; /* Sit on top of the page */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -477,7 +477,7 @@ h9{
 #ticket-modal-movie-1 {
     display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 1000; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -723,11 +723,9 @@ h9{
     background-color: #ffffff;
     color: #000; /* Text color for active buttons */
 }
-
-.seat-button.active:hover {
+.seat-button.seat-button{
     background-color: #C3941C;
-}
-
+} 
 .seat-button.inactive {
     background-color: #232323;
     color: #777; /* Text color for inactive buttons */
@@ -739,9 +737,7 @@ h9{
     text-align: left;
     padding: 5px;
 }
-.seat-button.selected {
-    background-color: #C3941C; /* Color for selected seats */
-}
+
 .seeall-modal {
     display: none; /* Initially hidden */
     position: fixed; /* Position fixed to make it full screen */
@@ -791,7 +787,7 @@ h3:hover {
     display: none; /* initially hidden */
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 500;
 }
 
 .full-screen-modal.show {
@@ -878,3 +874,12 @@ h3:hover {
     right: 10px;
   }
   
+input {
+    color:#000000;
+}
+.search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
+    gap: 10px;
+    /* Other styling as needed */
+}
