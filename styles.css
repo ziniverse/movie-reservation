@@ -13,7 +13,9 @@ h1 {
     margin: 0;
     padding: 20px;
     text-align: left;
+    color: #99aac0;
 }
+
 .fas.fa-user {
     color: white;
     cursor: pointer;
@@ -37,6 +39,7 @@ h1 {
     overflow: auto; 
     background-color: rgba(0,0,0,0.4); 
 }
+
 
 .modal-user-content {
     background-color: #000000;
@@ -75,7 +78,7 @@ h1 {
 
 input[type=submit] {
     width: 100%;
-    background-color: #C3941C;
+    background-color: #32527B;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -84,7 +87,7 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-    background-color: #CAA035;
+    background-color: #5681ba;
 }
 
 
@@ -98,12 +101,12 @@ input[type=submit]:hover {
 }
 
 .search-input {
-    width: 314px;
+    width: 400px;
     height: 35px;
     border: none;
     padding: 0 10px;
     border-radius: 5px;
-    background-color: #C3941C;
+    background-color: #96b1d4;
     color: #ffffff;
     padding-left: 30px;
 }
@@ -131,11 +134,22 @@ h2, h3 {
     margin: 0;
 }
 h2{
+    color: #99aac0;
     font-size: 20px;
+}
+.nowplaying {
+    color:#32527B;
+}
+.comingsoon {
+    color: #32527B;
 }
 h3{
     font-size: 16px;
 }
+.m-title {
+    color:#32527B
+}
+
 .current-movies {
     display: flex;
     flex-wrap: nowrap;
@@ -190,7 +204,7 @@ h3{
     cursor: pointer;
 }
 .movie-button:hover{
-    background-color: #C3941C;
+    background-color: #32527B;
 }
 
 /* Styles for movie title and release year */
@@ -257,7 +271,9 @@ h3{
     cursor: pointer;
     margin-bottom: 10px; /* Spacing between button and title */
 }
-
+.upcoming-movie-button:hover{
+    background-color: #746e6e;
+}
 /* Adjust the margin of the last upcoming movie container */
 .upcoming-movies .upcoming-movie:last-child {
     margin-right: 0;
@@ -313,7 +329,7 @@ h3{
     width: 112px;
     height: 169px;
     border-radius: 10px;
-    border-color: #9A7924;
+    border-color: #32527B;
     text-align: center;
     cursor: pointer;
     margin-left: -5px;
@@ -403,6 +419,9 @@ h3{
     border-radius: 14px;          /* If you want rounded corners */
     cursor: pointer;
 }
+.trailer-btn:hover {
+    background-color: #938585;
+}
 
 .trailer-btn i.fa-play {
     margin-right: 5px;          /* Space between icon and text */
@@ -412,12 +431,12 @@ h7{
 }
 h8{
     font-size: 26px;
-    color: #CAA035;
+    color: #32527B;
     font-weight: bold;
 }
 h9{
     font-size: 12px;
-    color: #CAA035;
+    color: #32527B;
     font-weight: bold;
 }
 .inner-box .movie-details {
@@ -446,7 +465,7 @@ h9{
     font-style: italic;  /* Making the "Duration" text italic */
 }
 .modal-content h1 {
-    color: #C3941C;
+    color: #32527B;
     font-weight: bold;
 }
 .book-now-btn {
@@ -465,7 +484,7 @@ h9{
 }
 
 .book-now-btn:hover {
-    background-color: #C3941C; /* Color change on hover */
+    background-color: #32527B; /* Color change on hover */
 }
 .movie-2-p {
     font-size: 12px;
@@ -548,7 +567,7 @@ h9{
     transition: background-color 0.3s;
 }
 .location-button:hover {
-    background-color: #C3941C; /* Changes the background color on hover */
+    background-color: #32527B; /* Changes the background color on hover */
 }
 .date-selection-container h3 {
     /* Your existing styles */
@@ -589,7 +608,7 @@ h9{
 }
 
 .date-button:hover {
-    background-color: #C3941C; /* Changes the background color on hover */
+    background-color: #32527B; /* Changes the background color on hover */
 }
 .time-selection-container {
     /* This will control the overall container of the time selection, including the <h3> and the button container */
@@ -641,11 +660,11 @@ h9{
 }
 
 .time-button:hover {
-    background-color: #C3941C;
+    background-color: #32527B;
 }
 /* Updated CSS for the clicked state */
 .location-button.clicked, .date-button.clicked, .time-button.clicked {
-    background-color: #C3941C;
+    background-color: #32527B;
 }
 .seat-selection-container {
     /* This will control the overall container of the time selection, including the <h3> and the button container */
@@ -724,7 +743,7 @@ h9{
     color: #000; /* Text color for active buttons */
 }
 .seat-button.seat-button{
-    background-color: #C3941C;
+    background-color: #32527B;
 } 
 .seat-button.inactive {
     background-color: #232323;
@@ -736,6 +755,9 @@ h9{
     font-weight: bold;
     text-align: left;
     padding: 5px;
+}
+.seat-button.active:hover {
+    background-color: #32527B;
 }
 
 .seeall-modal {
@@ -774,7 +796,7 @@ h9{
     padding: 20px; /* Padding around the grid */
 }
 h3:hover {
-    color: #C3941C;
+    color: #32527B;
 }
 .full-screen-modal {
     position: fixed;
@@ -804,6 +826,7 @@ h3:hover {
     left: 20px;
     display: flex;
     align-items: center;
+    margin-top: 50px;
 }
 
 .search-modal-content img {
@@ -827,7 +850,7 @@ h3:hover {
     margin-right: auto; /* Center the button */
 }
 .buy-ticket-button:hover {
-    background-color: #C3941C; /* Color change on hover */
+    background-color: #32527B; /* Color change on hover */
 }
 /* The Confirmation Modal (background) */
 .confirmation-modal {
@@ -882,4 +905,56 @@ input {
     grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
     gap: 10px;
     /* Other styling as needed */
+}
+.movie-title {
+    color: #779dce;
+}
+#userIcon:hover {
+    color: #32527B;
+}
+.date{
+    color: #32527B;
+}
+.time {
+    color: #32527B;
+}
+.seat {
+    color: #32527B;
+}
+.buy-ticket-modal {
+    display: none;
+    /* Add other styles for positioning, size, etc. */
+}
+.close-btn {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    cursor: pointer;
+    z-index: 2000;
+}
+.buy-ticket-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); 
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+.bounce-effect {
+    animation: bounce 1s;
 }
