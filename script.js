@@ -122,10 +122,29 @@ function changeTicketCount(button, change) {
         var modal = counterDiv.closest('.modal');
         if (modal) {
             updateTotal(modal);
+            globalTicketCounter += change;
+            globalTicketCounter = Math.max(0, globalTicketCounter); // Ensure counter doesn't go below 0
+            updateSeatButtons(modal); // Update seat buttons based on the current ticket count
         }
     }
 }
 
+// Function to update seat buttons based on globalTicketCounter
+function updateSeatButtons(modal) {
+    var seats = modal.querySelectorAll('.seat-button.active');
+    var totalTickets = globalTicketCounter;
+    seats.forEach(function(seat, index) {
+        if (index < totalTickets) {
+            seat.disabled = false;
+        } else {
+            seat.disabled = true;
+            seat.classList.remove('selected');
+            seat.style.backgroundColor = '#FFFFFF'; // Reset color for deselected seats
+        }
+    });
+}
+
+var globalTicketCounter = 0;
 // Function to calculate and update the total price for a given modal
 function updateTotal(modal) {
     var adultPrice = 16.52;
@@ -166,105 +185,139 @@ document.querySelectorAll('.modal').forEach(function(modal) {
     });
     updateTotal(modal);
 });
+
 // JavaScript for Seat Selection with Dynamic Content and Seat Buttons
 document.addEventListener("DOMContentLoaded", function() {
     var modals = document.querySelectorAll('.modal');
+    var modalSeatStates = {}; // Object to store seat states for each modal
 
-    modals.forEach(function(modal) {
+    // Function to generate random seat states
+    function generateRandomSeatStates(totalSeats, activeSeats) {
+        var seatStates = new Array(totalSeats).fill(false);
+        for (let i = 0; i < activeSeats; i++) {
+            let index;
+            do {
+                index = Math.floor(Math.random() * totalSeats);
+            } while (seatStates[index]);
+            seatStates[index] = true;
+        }
+        return seatStates;
+    }
+
+    // Iterate through each modal
+    modals.forEach(function(modal, modalIndex) {
         var timeButtons = modal.querySelectorAll('.time-button');
-        function updateSeatSelection(timeButtonText, modal) {
-            var seatSelectionContainer = modal.querySelector('.seat-selection-container');
-            var seatSelectionHeader = seatSelectionContainer.querySelector('h3');
-            var seatsContainer = modal.querySelector('.seats-container');
-            var totalTickets = getTotalTickets(modal);
-            var selectedSeats = 0;
-            if (seatSelectionHeader) {
-                seatSelectionHeader.textContent = 'Select Your Seats ' + timeButtonText;
-            }
+        modalSeatStates[modalIndex] = {}; // Initialize seat state storage for this modal
 
-            seatsContainer.innerHTML = '';
-
+        // Generate and store random seat states for each time button in the modal
+        timeButtons.forEach(function(button) {
+            var timeButtonText = button.textContent.trim();
             var totalSeats = parseInt(timeButtonText.split('/')[1]);
             var activeSeats = parseInt(timeButtonText.split(' ')[1].split('/')[0]);
-            var seatStates = new Array(totalSeats).fill(false);
-            var existingBuyButton = modal.querySelector('.buy-ticket-button');
-            if (existingBuyButton) {
-                existingBuyButton.remove();
-            }
-            // Randomly set activeSeats number of seats to active (true)
-            for (let i = 0; i < activeSeats; i++) {
-                let index;
-                do {
-                    index = Math.floor(Math.random() * totalSeats);
-                } while (seatStates[index]);
-                seatStates[index] = true;
-            }
 
-            // Calculate the number of rows
-            const seatsPerRow = 20;
-            const numberOfRows = Math.ceil(totalSeats / seatsPerRow);
+            modalSeatStates[modalIndex][timeButtonText] = generateRandomSeatStates(totalSeats, activeSeats);
+        });
 
-            // Create row labels and seat buttons
-            for (let row = 0; row < numberOfRows; row++) {
-                let rowLabel = document.createElement('div');
-                rowLabel.className = 'row-label';
-                rowLabel.textContent = 'Row ' + (row + 1);
-                seatsContainer.appendChild(rowLabel);
-
-                for (let seat = 0; seat < seatsPerRow; seat++) {
-                    let seatIndex = row * seatsPerRow + seat;
-                    if (seatIndex < totalSeats) {
-                        let seatButton = document.createElement('button');
-                        let isActive = seatStates[seatIndex];
-                        seatButton.className = isActive ? 'seat-button active' : 'seat-button inactive';
-                        seatButton.textContent = 'Seat ' + (seat + 1);
-
-                        if (isActive) {
-                            seatButton.addEventListener('click', function() {
-                                if (selectedSeats < totalTickets) {
-                                    if (!this.classList.contains('selected')) {
-                                        this.classList.add('selected');
-                                        selectedSeats++;
-                                    } else {
-                                        this.classList.remove('selected');
-                                        selectedSeats--;
-                                    }
-                                } else if (this.classList.contains('selected')) {
-                                    this.classList.remove('selected');
-                                    selectedSeats--;
-                                }
-                            });
-                        } else {
-                            seatButton.disabled = true;
-                        }
-
-                        seatsContainer.appendChild(seatButton);
-                    }
-                }
-            }
-            var buyTicketButton = document.createElement('button');
-            buyTicketButton.className = 'buy-ticket-button';
-            buyTicketButton.textContent = 'Buy Ticket';
-            seatsContainer.appendChild(buyTicketButton);
-            seatSelectionContainer.style.display = 'flex';
-        }
-
-        function getTotalTickets(modal) {
-            var adultTickets = parseInt(modal.querySelector('#adults').value) || 0;
-            var childrenTickets = parseInt(modal.querySelector('#children').value) || 0;
-            var seniorTickets = parseInt(modal.querySelector('#seniors').value) || 0;
-            var studentTickets = parseInt(modal.querySelector('#students').value) || 0;
-            var wheelchairTickets = parseInt(modal.querySelector('#wheelchair').value) || 0;
-            return adultTickets + childrenTickets + seniorTickets + studentTickets + wheelchairTickets;
-        }
-
+        // Add event listeners to time buttons
         timeButtons.forEach(function(button) {
             button.addEventListener('click', function() {
                 var timeButtonText = button.textContent.trim();
-                updateSeatSelection(timeButtonText, modal);
+                updateSeatSelection(timeButtonText, modal, modalIndex);
             });
         });
     });
+
+    // Function to update seat selection
+    function updateSeatSelection(timeButtonText, modal, modalIndex) {
+        var seatStates = modalSeatStates[modalIndex][timeButtonText];
+        var seatSelectionContainer = modal.querySelector('.seat-selection-container');
+        var seatSelectionHeader = seatSelectionContainer.querySelector('h3');
+        var seatsContainer = modal.querySelector('.seats-container');
+        var totalTickets = getTotalTickets(modal);
+        var selectedSeats = 0;
+    
+        if (seatSelectionHeader) {
+            seatSelectionHeader.textContent = 'Select Your Seats ' + timeButtonText;
+        }
+    
+        seatsContainer.innerHTML = '';
+    
+        var totalSeats = parseInt(timeButtonText.split('/')[1]);
+        const seatsPerRow = 20;
+        const numberOfRows = Math.ceil(totalSeats / seatsPerRow);
+    
+        // Create row labels and seat buttons
+        for (let row = 0; row < numberOfRows; row++) {
+            let rowLabel = document.createElement('div');
+            rowLabel.className = 'row-label';
+            rowLabel.textContent = 'Row ' + (row + 1);
+            seatsContainer.appendChild(rowLabel);
+    
+            for (let seat = 0; seat < seatsPerRow; seat++) {
+                let seatIndex = row * seatsPerRow + seat;
+                if (seatIndex < totalSeats) {
+                    let seatButton = document.createElement('button');
+                    let isActive = seatStates[seatIndex];
+                    seatButton.className = isActive ? 'seat-button active' : 'seat-button inactive';
+                    seatButton.textContent = 'Seat ' + (seat + 1);
+    
+                    if (isActive) {
+                        seatButton.style.backgroundColor = '#FFFFFF'; // Initial color for active seats
+    
+                        seatButton.addEventListener('click', function() {
+                            if (seatButton.classList.contains('selected')) {
+                                // Unselect the seat
+                                seatButton.style.backgroundColor = '#FFFFFF'; // Original color
+                                seatButton.classList.remove('selected');
+                                selectedSeats--;
+                            } else if (selectedSeats < totalTickets) {
+                                // Select the seat
+                                seatButton.style.backgroundColor = '#32527B'; // Selected color
+                                seatButton.classList.add('selected');
+                                selectedSeats++;
+                            }
+                        });
+                    }
+    
+                    seatsContainer.appendChild(seatButton);
+                }
+            }
+        }
+    
+        var buyTicketButton = document.createElement('button');
+        buyTicketButton.className = 'buy-ticket-button';
+        buyTicketButton.textContent = 'Buy Ticket';
+        buyTicketButton.addEventListener('click', function() {
+            openBuyTicketModal();
+        });
+        seatsContainer.appendChild(buyTicketButton);
+        seatSelectionContainer.style.display = 'flex';
+    }
+    
+    // Function to get the total number of tickets
+    function getTotalTickets(modal) {
+        var adultTickets = parseInt(modal.querySelector('#adults').value) || 0;
+        var childrenTickets = parseInt(modal.querySelector('#children').value) || 0;
+        var seniorTickets = parseInt(modal.querySelector('#seniors').value) || 0;
+        var studentTickets = parseInt(modal.querySelector('#students').value) || 0;
+        var wheelchairTickets = parseInt(modal.querySelector('#wheelchair').value) || 0;
+        return adultTickets + childrenTickets + seniorTickets + studentTickets + wheelchairTickets;
+    }
+    
+});  
+document.querySelectorAll('.modal').forEach(function(modal) {
+    modal.querySelectorAll('.button').forEach(function(button) {
+        button.onclick = function() {
+            var change = button.textContent.trim() === '+' ? 1 : -1;
+            globalTicketCounter += change;
+            globalTicketCounter = Math.max(0, globalTicketCounter); // Ensure counter doesn't go below 0
+            updateSeatButtons(modal); // Update seat buttons based on the current ticket count
+            changeTicketCount(button, change);
+            updateTotal(modal); // Update the total price
+        };
+    });
+    updateSeatButtons(modal); // Initial seat button update
+    updateTotal(modal); // Initial total update
 });
   // Function to reset all buttons of a particular class to the initial color
   function resetButtonColors(buttonClass) {
@@ -468,7 +521,7 @@ function displaySearchResults(foundMovies) {
     searchModalContainer.innerHTML = `
         <div class="full-screen-modal show">
             <span class="close-button">&times;</span>
-            <div class="search-modal-content" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+            <div class="search-modal-content" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;"></div>
         </div>`;
 
     const searchModalContent = searchModalContainer.querySelector('.search-modal-content');
@@ -508,18 +561,137 @@ function openMovieModal(movieModalId) {
         modal.style.display = 'block';
     }
 }
+function openBuyTicketModal() {
+    var buyTicketModal = document.getElementById('buy-ticket-modal');
+    buyTicketModal.style.display = 'block';
+    // Add any additional logic needed, e.g., populating the modal with data
+}
+document.getElementById('close-buy-ticket-modal').addEventListener('click', function() {
+    document.getElementById('buy-ticket-modal').style.display = 'none';
+});
+// Example of updating the modal when a location, date, time, or seat is selected
+document.addEventListener('DOMContentLoaded', function() {
+    // Update for Location
+    document.querySelectorAll('.location-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var selectedLocation = button.textContent.trim();
+            updateBuyTicketModal('Location:', selectedLocation);
+        });
+    });
 
-document.querySelectorAll('.buy-ticket-button').forEach(function(button) {
+    // Update for Date
+    document.querySelectorAll('.date-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var selectedDate = button.textContent.trim();
+            updateBuyTicketModal('Date:', selectedDate);
+        });
+    });
+
+    // Update for Time
+    document.querySelectorAll('.time-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var selectedTime = button.textContent.trim().split(' ')[0]; // Assuming the format is '10:00 12/100'
+            updateBuyTicketModal('Time:', selectedTime);
+        });
+    });
+
+    // Update for Ticket Category and Price - Assuming this is handled elsewhere in your code
+    // You should call updateBuyTicketModal('Tickets(Category):', category);
+    // and updateBuyTicketModal('Tickets Price:', price); at the appropriate place in your code.
+
+    // Update for Seats - Assuming this is handled when seats are selected
+    // You should call updateBuyTicketModal('Seats:', selectedSeats); where selectedSeats is a string of selected seats.
+});
+
+// Variables to store user selections
+let selectedLocation = '';
+let selectedDate = '';
+let selectedTime = '';
+let selectedSeats = []; // Array to store selected seat details
+
+// Function to update the modal content
+function updateBuyTicketModal() {
+    let modalContent = `
+        <p>Location: ${selectedLocation}</p>
+        <p>Date: ${selectedDate}</p>
+        <p>Time: ${selectedTime}</p>
+        <p>Number of Tickets: ${selectedSeats.length}</p>
+        <p>Total Price: </p>
+        <p>Seats: ${selectedSeats.join(', ')}</p>
+    `;
+    document.getElementById('buy-ticket-modal-content').innerHTML = modalContent;
+}
+
+// Example event listeners to update the selected values
+document.querySelectorAll('.location-button').forEach(button => {
     button.addEventListener('click', function() {
-        console.log('Buy Ticket button was clicked.');
+        selectedLocation = this.textContent.trim();
+        updateBuyTicketModal();
+    });
+});
+document.querySelectorAll('.date-button').forEach(button => {
+    button.addEventListener('click', function() {
+        selectedDate = this.textContent.trim();
+        updateBuyTicketModal();
+    });
+});
+document.querySelectorAll('.time-button').forEach(button => {
+    button.addEventListener('click', function() {
+        selectedTime = this.textContent.trim();
+        updateBuyTicketModal();
+    });
+});
+// Similar event listeners for date, time, and seat selections
+// ...
 
-        // Attempt to display the confirmation modal
-        var confirmationModal = document.querySelector('.confirmation-modal');
-        if (confirmationModal) {
-            console.log('Confirmation modal found:', confirmationModal);
-            confirmationModal.style.display = 'block';
+// Example of seat selection logic
+document.querySelectorAll('.seat-button').forEach(button => {
+    button.addEventListener('click', function() {
+        let seatInfo = this.textContent.trim(); // e.g., "Row 3 Seat 5"
+        console.log("Seat clicked:", seatInfo); // Debugging line
+
+        if (!selectedSeats.includes(seatInfo)) {
+            selectedSeats.push(seatInfo);
         } else {
-            console.log('Confirmation modal not found. Please check the class name.');
+            selectedSeats = selectedSeats.filter(seat => seat !== seatInfo);
+        }
+
+        console.log("Selected seats:", selectedSeats); // Debugging line
+        updateBuyTicketModal();
+    });
+});
+document.querySelectorAll('.time-button').forEach(button => {
+    button.addEventListener('click', function() {
+        var seatSelectionContainer = this.closest('.modal').querySelector('.seat-selection-container');
+
+        if (seatSelectionContainer) {
+            // Scroll to the seat selection container
+            seatSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            addBounceEffect(seatSelectionContainer);
         }
     });
 });
+
+function addBounceEffect(element) {
+    // Add bounce effect class
+    element.classList.add('bounce-effect');
+
+    // Optional: Remove the class after the animation completes
+    setTimeout(() => {
+        element.classList.remove('bounce-effect');
+    }, 1000); // The timeout should match the duration of the animation
+}
+
+// Call this function when the seat selection section is initially displayed
+function onSeatSelectionDisplay() {
+    var seatSelectionContainer = document.querySelector('.seat-selection-container');
+    if (seatSelectionContainer) {
+        addBounceEffect(seatSelectionContainer);
+    }
+}
+
+// Example of calling the function when the modal is displayed
+// You might need to adjust this part based on how your modal display logic works
+onSeatSelectionDisplay();
+
