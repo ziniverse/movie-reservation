@@ -38,7 +38,7 @@
             <i class="fa fa-search"></i>
         </div>
         <div class="current-movie-header">
-            <h2>Now Playing</h2>
+            <h2 class="nowplaying">Now Playing</h2>
             <h3 id="seeAllCurrentMovies">See All</h3>
         </div>
         <div class="current-movies">
@@ -46,7 +46,7 @@
                 <button class="movie-button">
                     <img src="cgYg04miVQUAG2FKk3amSnnHzOp.jpg" alt="Movie 1">
                 </button>
-                <h4>Barbie</h4>
+                <h4 class="m-title">Barbie</h4>
                 <h5>2023</h5>
             </div>
             <div class="movie" id="movie-2">
@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="upcoming-movie-header">
-            <h2>Coming Soon</h2>
+            <h2 class="comingsoon">Coming Soon</h2>
             <h3 id="seeAllUpcomingMovies">See All</h3>
         </div>
         <div class="upcoming-movies">
@@ -352,11 +352,11 @@
                         Omena
                     </button>
                     <button class="location-button">Espoo:
-                        Cello
+                        Sello
                     </button>
                 </div>
                 <div class="date-selection-container" style="display: none;">
-                    <h3>Select Date</h3>
+                    <h3 class="date">Select Date</h3>
                     <div class="date-buttons-container">
                         <!-- Dynamically generate or manually insert buttons for the dates -->
                         <button class="date-button">6.11</button>
@@ -370,7 +370,7 @@
                     </div>
                 </div>
                 <div class="time-selection-container" style="display: none;">
-                    <h3>Select a Time</h3>
+                    <h3 class="time">Select a Time</h3>
                     <div class="time-buttons-container" id="time-buttons-container-movie-1">
                         <!-- Time buttons for Date 1 -->
                         <div class="time-slot" data-date="6.11" style="display: none;">
@@ -471,7 +471,7 @@
                     </div>
                 </div>
                 <div class="seat-selection-container" style="display: none;">
-                    <h3>Select Your Seats</h3>
+                    <h3 class="seat">Select Your Seats</h3>
                     <div class="counter" id="adultCounter">
                         <label for="adults">Adults (€16.52 each):</label>
                         <button class="button" onclick="changeTicketCount('adults', -1)">-</button>
@@ -511,12 +511,14 @@
                         <label for="total">Total:</label>
                         <input type="text" id="total" value="€0" readonly>
                     </div>
+                    <button class="selection-done-btn">Selection Done</button>
                     <div class="seats-container">
                         <!-- Seat buttons will be dynamically inserted here by JavaScript -->
                     </div>
-                    
+                    <div class="buy-ticket-section">
+                        <!-- The buy ticket button will be dynamically added here -->
+                    </div>
                 </div>
-                <button class="buy-ticket-button">Buy Ticket</button>
                 </div>
                 </div>
         <div class="modal" id="ticket-modal-movie-2">
@@ -537,7 +539,7 @@
                         Omena
                     </button>
                     <button class="location-button">Espoo:
-                        Cello
+                        Sello
                     </button>
                 </div>
                 <div class="date-selection-container" style="display: none;">
@@ -686,7 +688,7 @@
                         Omena
                     </button>
                     <button class="location-button">Espoo:
-                        Cello
+                        Sello
                     </button>
                 </div>
                 <div class="date-selection-container" style="display: none;">
@@ -708,13 +710,13 @@
                     <div class="time-buttons-container" id="time-buttons-container-movie-3">
                         <!-- Time buttons for Date 1 -->
                         <div class="time-slot" data-date="6.11" style="display: none;">
-                            <button class="time-button">10:00 12/100
+                            <button class="time-button">10:02 12/100
                             </button>
-                            <button class="time-button">12:01 40/120
+                            <button class="time-button">12:03 40/120
                             </button>
-                            <button class="time-button">14:01 38/160
+                            <button class="time-button">14:03 38/160
                             </button>
-                            <button class="time-button">18:01 90/200
+                            <button class="time-button">18:03 90/200
                             </button>
                             <!-- ... more time buttons ... -->
                         </div>
@@ -869,7 +871,7 @@
                         Omena
                     </button>
                     <button class="location-button">Espoo:
-                        Cello
+                        Sello
                     </button>
                 </div>
                 <div class="date-selection-container" style="display: none;">
@@ -891,7 +893,7 @@
                     <div class="time-buttons-container" id="time-buttons-container-movie-4">
                         <!-- Time buttons for Date 1 -->
                         <div class="time-slot" data-date="6.11" style="display: none;">
-                            <button class="time-button">10:00 12/100
+                            <button class="time-button">10:46 12/100
                             </button>
                             <button class="time-button">12:01 40/120
                             </button>
@@ -1052,7 +1054,7 @@
                         Omena
                     </button>
                     <button class="location-button">Espoo:
-                        Cello
+                        Sello
                     </button>
                 </div>
                 <div class="date-selection-container" style="display: none;">
@@ -1074,7 +1076,7 @@
                     <div class="time-buttons-container" id="time-buttons-container-movie-5">
                         <!-- Time buttons for Date 1 -->
                         <div class="time-slot" data-date="6.11" style="display: none;">
-                            <button class="time-button">10:00 12/100
+                            <button class="time-button">10:07 12/100
                             </button>
                             <button class="time-button">12:01 40/120
                             </button>
@@ -1226,19 +1228,16 @@
                     </div>
                 </div> 
                 <div id="search-modal-container"></div>
-                <div id="confirmationModal" class="confirmation-modal">
-                    <div class="confirmation-modal-content">
-                      <span class="close">&times;</span>
-                      <h2>Confirmation Details</h2>
-                      <p id="confirmationLocation">Location: </p>
-                      <p id="confirmationDate">Date: </p>
-                      <p id="confirmationTime">Time Slot: </p>
-                      <p id="confirmationTickets">Number of Tickets: </p>
-                      <p id="confirmationTotalPrice">Total Price: </p>
-                      <p id="confirmationSeats">Seats Selected: </p>
-                      <button id="confirmPurchase">Confirm Purchase</button>
+                <div class="buy-ticket-modal" id="buy-ticket-modal">
+                    <div class="modal-content">
+                        <span class="close-btn" id="close-buy-ticket-modal"><i class="fas fa-arrow-left"></i></span>
+                        <h2>Reservation Summary</h2>
+                        <div id="buy-ticket-modal-content">
+                            <!-- The summary content will be dynamically inserted here by JavaScript -->
+                        </div>
+                        <h3>Thank you for buying the tickets!</h3>
                     </div>
-                  </div>
+                </div>              
       <script src="script.js"></script>
     </body>
     </html>
