@@ -337,9 +337,14 @@ h3{
 .upcoming-img {
     width: 70px;
     height: 97px;
-    object-fit: cover;
-    margin-right: 20px;
+    margin-right: 1px;
     border-radius: 14px;
+}
+.upcoming-movie-button h5 {
+    font-size: 12px;
+}
+#upcoming-movie-2 .upcoming-movie-button {
+    font-size: 9px;
 }
 .modal-content::before {
     content: "";
@@ -440,7 +445,7 @@ h9{
     font-weight: bold;
 }
 .inner-box .movie-details {
-    margin-top: 40px;
+    margin-top: 30px;
     padding-left: 0px; /* Providing some left padding to align content */
 }
 .inner-box .year,
@@ -450,8 +455,20 @@ h9{
     margin-bottom: 5px;  /* Spacing between each line */
     color: #ffffff;  /* Text color, adjust if necessary */
 }
-
+.movie-title{
+    font-size: 18px;
+}
+#modal-movie-3 .movie-title {
+    font-size: 14px;
+}
+#modal-movie-5 .movie-title {
+    font-size: 16px;
+}
+#modal-upcoming-movie-2 .movie-title {
+    font-size: 12px;
+}
 .inner-box .year {
+    margin-top: 5px;
     font-size: 14px;  /* Adjust font size if needed */
   /* Makes the year text bold */
 }
@@ -720,20 +737,19 @@ h9{
     cursor: not-allowed;
   }
   .seat-button {
-    height: 26px;
-    width: 26px;
-    border: none; /* black border */
-    background-color: #fff; /* white background */
-    cursor: pointer; /* cursor changes to a pointer when hovering over the button */
-    margin: 2px; /* space between buttons */
-    /* Add other styles like border-radius, font-size, etc., as per your design requirements */
-    font-size: 10px;
+    height: 26px; /* Smaller height */
+    width: 26px; /* Smaller width */
+    border: none; /* No border */
+    background-color: #fff; /* White background */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 2px; /* Smaller space between buttons */
+    font-size: 8px; 
 }
 .seats-container {
     display: grid;
     grid-template-columns: repeat(20, 1fr); /* Creates 20 columns */
-    gap: 5px; /* Fixed gap between buttons */
-    margin: 10px 0; /* Adds some margin around the grid */
+    gap: 2px; /* Reduced gap between buttons */
+    margin: 1px 0;
 }
 #total-counter {
     margin-left: 20px;
@@ -957,4 +973,8 @@ input {
 
 .bounce-effect {
     animation: bounce 1s;
+}
+
+.low-availability {
+    border: 2px solid red;
 }
